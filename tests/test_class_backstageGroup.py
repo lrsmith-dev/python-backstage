@@ -8,7 +8,7 @@ def test_backstageGroupClass_requiredFields_noChildren(capsys):
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -27,7 +27,7 @@ def test_backstageGroupClass_requiredFields_withChildren(capsys):
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -49,7 +49,7 @@ def test_backstageGroupClass_withParent(capsys):
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -68,7 +68,7 @@ def test_backstageGroupClass_withMembers(capsys):
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -84,14 +84,14 @@ spec:
 
 
 
-def test_backstageGroupClass_withDisplayname(capsys):
+def test_backstageGroupClass_withdisplayName(capsys):
     obj = backstage.BackstageGroup(name="o11y",
                                    type="team",
-                                   displayname = "The Observability Team" )
+                                   displayName = "The Observability Team" )
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -101,7 +101,7 @@ spec:
   type: team
 
 """
-    assert obj.displayname == "The Observability Team"
+    assert obj.displayName == "The Observability Team"
     assert captured.out == expected
 
 def test_backstageGroupClass_withEmail(capsys):
@@ -111,7 +111,7 @@ def test_backstageGroupClass_withEmail(capsys):
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:
@@ -129,13 +129,13 @@ def test_backstageGroupClass(capsys):
                                    type="team",
                                    members = [ 'John Doe', 'Jane Doe'],
                                    parent = "engineering",
-                                   displayname = "The Observability Team",
+                                   displayName = "The Observability Team",
                                    children= ['team-logging','team-metrics','team-traces'],
                                    email = "o11y@big.brother" )
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
-kind: group
+kind: Group
 metadata:
   name: o11y
 spec:

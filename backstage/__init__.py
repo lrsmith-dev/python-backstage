@@ -36,6 +36,48 @@ class Backstage:
                 yaml.dump(tmp) 
                 )
 
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-user
+class BackstageUser(Backstage):
+    def __init__(self,
+                 name,
+                 apiversion = None,
+                 displayName=None,  # Optional field
+                 email=None,        # Optional field
+                 memberOf = [],
+                 ):
+
+        self.__spec = {}
+        self.__spec['memberOf'] = memberOf
+
+        if displayName is not None:
+            if 'profile' not in self.__spec:
+                self.__spec['profile'] = {}
+            self.__spec['profile']['displayName'] = displayName
+
+        if email is not None:
+            if 'profile' not in self.__spec:
+                self.__spec['profile'] = {}
+            self.__spec['profile']['email'] = email
+
+        super().__init__(name=name,
+                         kind="User")
+    
+    @property
+    def memberOf(self):
+        return self.__spec['memberOf']
+
+    @property
+    def displayName(self): 
+        return self.__spec['profile']['displayName']
+
+    @property
+    def email(self): 
+        return self.__spec['profile']['email']
+
+    @property
+    def spec(self): 
+        return self.__spec
+    
 # https://backstage.io/docs/features/software-catalog/descriptor-format#kind-group
 class BackstageGroup(Backstage):
     def __init__(self,
@@ -44,7 +86,7 @@ class BackstageGroup(Backstage):
                  parent=None,       # Optional field
                  apiversion=None,
                  children=[],
-                 displayname=None,  # Optional field
+                 displayName=None,  # Optional field
                  email=None,        # Optional field
                  members=[],        # Optional field
     ):
@@ -59,10 +101,10 @@ class BackstageGroup(Backstage):
         if members != []:
             self.__spec['members'] = members
 
-        if displayname is not None:
+        if displayName is not None:
             if 'profile' not in self.__spec:
                 self.__spec['profile'] = {}
-            self.__spec['profile']['displayName'] = displayname
+            self.__spec['profile']['displayName'] = displayName
 
         if email is not None:
             if 'profile' not in self.__spec:
@@ -71,7 +113,7 @@ class BackstageGroup(Backstage):
 
 
         super().__init__(name=name,
-                         kind="group")
+                         kind="Group")
 
     @property
     def type(self): 
@@ -82,7 +124,7 @@ class BackstageGroup(Backstage):
         return self.__spec['children']
 
     @property
-    def displayname(self): 
+    def displayName(self): 
         return self.__spec['profile']['displayName']
 
     @property
@@ -96,7 +138,6 @@ class BackstageGroup(Backstage):
     @property
     def parent(self): 
         return self.__spec['parent']
-
 
     @property
     def spec(self): 
