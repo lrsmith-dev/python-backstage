@@ -21,9 +21,15 @@ spec:
     assert captured.out == expected
 
 def test_backstageGroupClass_requiredFields_withChildren(capsys):
+    logging = backstage.BackstageGroup(name="team-logging",
+                                   type="team")
+    metrics = backstage.BackstageGroup(name="team-metrics",
+                                   type="team")
+    traces = backstage.BackstageGroup(name="team-traces",
+                                   type="team")
     obj = backstage.BackstageGroup(name="o11y",
                                    type="team",
-                                   children= ['team-logging','team-metrics','team-traces'])
+                                   children= [ logging, metrics, traces])
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
@@ -40,12 +46,15 @@ spec:
 """
     assert captured.out == expected
     assert obj.type == "team"
-    assert obj.children == [ 'team-logging', 'team-metrics', 'team-traces' ]
+    # Refactor to verify names or new test to verify name?
+    assert obj.children == [ logging, metrics, traces ]
 
 def test_backstageGroupClass_withParent(capsys):
+    parent = backstage.BackstageGroup(name="engineering",
+                                   type="team" )
     obj = backstage.BackstageGroup(name="o11y",
                                    type="team",
-                                   parent = "engineering" )
+                                   parent = parent )
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
@@ -59,12 +68,14 @@ spec:
 
 """
     assert captured.out == expected
-    assert obj.parent == "engineering"
+    assert obj.parent.name == "engineering"
 
 def test_backstageGroupClass_withMembers(capsys):
+    john = backstage.BackstageUser(name="John Doe")
+    jane = backstage.BackstageUser(name="Jane Doe")
     obj = backstage.BackstageGroup(name="o11y",
                                    type="team",
-                                   members = [ 'John Doe', 'Jane Doe'] )
+                                   members = [ john, jane] )
     print(obj)
     captured = capsys.readouterr()
     expected = r"""apiVersion: backstage.io/v1alpha1
@@ -79,10 +90,8 @@ spec:
   type: team
 
 """
-    assert obj.members == [ 'John Doe', 'Jane Doe']
+    assert obj.members == [ john, jane ]
     assert captured.out == expected
-
-
 
 def test_backstageGroupClass_withdisplayName(capsys):
     obj = backstage.BackstageGroup(name="o11y",
@@ -125,12 +134,22 @@ spec:
     assert captured.out == expected
 
 def test_backstageGroupClass(capsys):
+    parent = backstage.BackstageGroup(name="engineering",
+                                   type="team" )
+    logging = backstage.BackstageGroup(name="team-logging",
+                                   type="team")
+    metrics = backstage.BackstageGroup(name="team-metrics",
+                                   type="team")
+    traces = backstage.BackstageGroup(name="team-traces",
+                                   type="team")
+    john = backstage.BackstageUser(name="John Doe")
+    jane = backstage.BackstageUser(name="Jane Doe")
     obj = backstage.BackstageGroup(name="o11y",
                                    type="team",
-                                   members = [ 'John Doe', 'Jane Doe'],
-                                   parent = "engineering",
+                                   members = [ john, jane],
+                                   parent = parent,
                                    displayName = "The Observability Team",
-                                   children= ['team-logging','team-metrics','team-traces'],
+                                   children= [logging, metrics,traces],
                                    email = "o11y@big.brother" )
     print(obj)
     captured = capsys.readouterr()

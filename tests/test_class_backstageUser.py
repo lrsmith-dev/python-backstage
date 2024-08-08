@@ -21,9 +21,10 @@ spec:
     assert captured.out == expected
 
 def test_backstageUser_requiredFields_withMemberOf(capsys):
-
+    group = backstage.BackstageGroup(name="Heart of Gold",
+                                   type="team" )
     obj = backstage.BackstageUser(name="zaphod",
-                                  memberOf = [ 'Heart of Gold' ],
+                                  memberOf = [ group ],
                                   )
     print(obj)
     captured = capsys.readouterr()
@@ -38,7 +39,7 @@ spec:
 """
     assert obj.kind == "User"
     assert obj.name == "zaphod"
-    assert obj.memberOf == ['Heart of Gold']
+    assert obj.memberOf == [ group ]
     assert captured.out == expected
 
 def test_backstageUser_displayName(capsys):
@@ -82,9 +83,11 @@ spec:
     assert captured.out == expected
 
 def test_backstageUser(capsys):
+    group = backstage.BackstageGroup(name="Heart of Gold",
+                                     type="team" )
     obj = backstage.BackstageUser(name="zaphod",
                                   displayName = "Zaphod Beeblebrox",
-                                  memberOf = [ 'Heart of Gold' ],
+                                  memberOf = [ group ],
                                   email = "zaphod@end.universe" )
     print(obj)
     captured = capsys.readouterr()

@@ -29,7 +29,16 @@ class Backstage:
         tmp['metadata'] = self.__metadata
 
         if hasattr(self,"spec"):
-            tmp['spec'] = self.spec
+            tmp['spec'] = {}
+            for key in self.spec.keys():
+                if key == 'parent':
+                    tmp['spec'][key] = self.spec[key].name
+                elif key == 'children' or key == 'members' or key == 'memberOf':
+                    tmp['spec'][key] = []
+                    for item in self.spec[key]:
+                        tmp['spec'][key].append(item.name)
+                else:
+                    tmp['spec'][key] = self.spec[key]
 
         return (f'apiVersion: {self.apiversion}\n'
                 f'kind: {self.kind}\n' + 
